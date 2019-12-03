@@ -21,18 +21,44 @@ namespace day2
             //Console.WriteLine("Testing... " + test + " ==> " + output + ", test =" + (output==result));
 
             // Executing...
-            // Once you have a working computer, the first step is to restore the gravity assist program (your puzzle input) 
-            //  to the "1202 program alarm" state it had just before the last computer caught fire. 
-            //  To do this, before running the program, replace position 1 with the value 12 and replace position 2 with the value 2.
             String[] intCodeStr = lines[0].Split(",");
-            intCodeStr[1] = "12";
-            intCodeStr[2] = "2";
-            String newIntCode = String.Join(",", intCodeStr);
-            String output = String.Join(",", getInitialValue(newIntCode));
-            Console.WriteLine("Testing... " + newIntCode);
-            Console.WriteLine("Result... " + output);
+            String expected = "19690720";
+
+            /* day 2 / first half
+            int noun = 12;
+            int verb = 2;
+            String expected = "19690720";
+            String result = testNounAndVerb(intCodeStr, noun, verb);
+            Console.WriteLine("noun = " + noun + ", verb = " + verb + ", result + " + result + ", test is " + (expected == result));
+            */
+
+            // day 2 / second half
+            var expectedNoun = 0;
+            var expectedVerb = 0;
+            for(var noun=0; noun <= 99; noun++) {
+                for(var verb=0; verb <= 99; verb++) {
+                    String result = testNounAndVerb(intCodeStr, noun, verb);
+                    if(expected == result) {
+                        Console.WriteLine("noun = " + noun + ", verb = " + verb + ", result + " + result + ", test is " + (expected == result));
+                        expectedNoun = noun;
+                        expectedVerb = verb;
+                        break;
+                    }
+                }
+            }
+            // What is 100 * noun + verb?
+            Console.WriteLine(100 * expectedNoun + expectedVerb);
         }
-        static int[] getInitialValue(String input) {
+
+        static String testNounAndVerb(String[] intCodeStr, int noun, int verb) {
+            intCodeStr[1] = noun.ToString();
+            intCodeStr[2] = verb.ToString();
+            String newIntCode = String.Join(",", intCodeStr);
+            int[] intCode = processIntCode(newIntCode);
+            return intCode[0].ToString();
+        }
+
+        static int[] processIntCode(String input) {
             String[] intCodeStr = input.Split(",");
             int[] intCode = Array.ConvertAll(intCodeStr, s => int.Parse(s));
 
